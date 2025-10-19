@@ -1,4 +1,4 @@
-import tienda from "../assets/Tienda.jpg"
+import tienda from "../../assets/imagenes/productos/Tienda.jpg";
 
 const ProductosDestacados = () => {
  

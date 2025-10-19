@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Form from "../components/Form";
-import logo from "../assets/logo.png";
-import IconsButton from "../components/IconsButton";
+import Form from "../components/formulario/Form";
+import logo from "../assets/imagenes/ui/logo.png";
+import IconsButton from "../components/layout/IconsButton";
 import { Link, useNavigate } from "react-router-dom";
 
 import { login } from "../services/authService";

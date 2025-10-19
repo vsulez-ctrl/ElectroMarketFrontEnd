@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import Footer from "../components/Footer";
+import Footer from "../components/layout/Footer";
 import { buscarMicrocontroladores } from "../services/productService";
 
-import Logo from "../components/logo";
-import mercado from "../assets/mercadoPago.png";
-import logo from "../assets/logo.png";
-import ResumenPedido from "../components/ResumenPedido";
+import Logo from "../components/layout/logo";
+import mercado from "../assets/imagenes/ui/mercadoPago.png";
+import logo from "../assets/imagenes/ui/logo.png";
+import ResumenPedido from "../components/Pedido/ResumenPedido";
 
 const MetodoPago = () => {
   const [seleccion, setSeleccion] = useState(() => {

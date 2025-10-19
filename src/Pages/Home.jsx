@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import MiniProyectos from "../components/MiniProyectos";
-import Beneficios from "../components/Beneficios";
-import Footer from "../components/Footer";
-import ProductosDestacados from "../components/ProductosDestacados";
+import Navbar from "../components/layout/Navbar";
+import Hero from "../components/home/Hero";
+import MiniProyectos from "../components/home/MiniProyectos";
+import Beneficios from "../components/home/Beneficios";
+import Footer from "../components/layout/Footer";
+import ProductosDestacados from "../components/home/ProductosDestacados";
 const Home = () => {
  return (
     <>

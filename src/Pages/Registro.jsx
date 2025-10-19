@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Form from "../components/Form";
-import logo from "../assets/logo.png";
-import IconsButton from "../components/IconsButton";
+import Form from "../components/formulario/Form";
+import logo from "../assets/imagenes/ui/logo.png";
+import IconsButton from "../components/layout/IconsButton";
 import { register } from "../services/authService";
 
 const Registro = () => {

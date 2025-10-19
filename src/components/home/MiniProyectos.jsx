@@ -1,4 +1,4 @@
-import Card from "../components/Card";
+import Card from "../layout/Card";
 
 const MiniProyectos = () => {
 const proyectos = [

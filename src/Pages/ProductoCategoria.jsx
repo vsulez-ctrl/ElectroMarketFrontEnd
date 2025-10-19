@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Filtros from "../components/Filtros"; // Importa tu componente de filtros
+import Filtros from "../components/Productos/Filtros"; // Importa tu componente de filtros
 
 // Simulación de productos
 const productosData = [

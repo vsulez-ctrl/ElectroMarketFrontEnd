@@ -3,7 +3,7 @@ import NavLinks from "./NavLinks";
 import NavIcons from "./NavIconos";
 import BurgerMenu from "./BurgerMenu";
 
-import logo from "../assets/logo.png";
+import logo from '../../assets/imagenes/ui/logo.png';
 
 const Navbar = () => {
   return (
