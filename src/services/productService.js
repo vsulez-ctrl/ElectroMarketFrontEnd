@@ -48,56 +48,86 @@ export async function buscarActuadores(filtro) {
 }
 
 
-// src/services/productService.js
 const API_URL = "http://localhost:3000"; // cambia si usas otro puerto o dominio
 
-// 🔹 Obtener productos por categoría (dinámico)
+// 🔹 Buscar productos con filtros
+export async function buscarProductos(filtro, categoria) {
+  try {
+    const params = new URLSearchParams();
+
+    // Agregamos parámetros dinámicamente
+    if (categoria) params.append("categoria", categoria);
+    if (filtro.q) params.append("query", filtro.q);
+    if (filtro.min) params.append("precioMin", filtro.min);
+    if (filtro.max) params.append("precioMax", filtro.max);
+    if (filtro.marcas?.length) params.append("marcas", filtro.marcas.join(","));
+    if (filtro.disponible) params.append("soloDisponibles", "true");
+
+    const res = await fetch(`${API_URL}/productos/buscar?${params.toString()}`);
+    if (!res.ok) throw new Error(`Error al buscar productos (${res.status})`);
+    
+    const data = await res.json();
+    console.log("✅ Productos filtrados obtenidos:", data);
+    return data;
+  } catch (error) {
+    console.error("❌ Error al buscar productos:", error);
+    return [];
+  }
+}
+
+// 🔹 Obtener productos por categoría
 export async function buscarProductosPorCategoria(categoria) {
   try {
     const res = await fetch(`${API_URL}/productos/categoria/${categoria}`);
     if (!res.ok) throw new Error(`Error al obtener productos de ${categoria}`);
     const data = await res.json();
-    console.log("✅ Productos obtenidos:", data);
-    return data; // ← lista de productos [{id, nombre, marca, precio, stock, imagen}]
+    console.log("✅ Productos por categoría:", data);
+    return data;
   } catch (error) {
-    console.error("❌ Error buscando productos:", error);
+    console.error("❌ Error buscando productos por categoría:", error);
     return [];
   }
 }
 
-// productService.js
-// Asegúrate de importar tu API_URL
 
+// 🔹 Obtener producto por ID
 export async function obtenerProductoPorId(id) {
   try {
-    // 🚨 Asumo que el endpoint de tu API es /productos/:id
-    const res = await fetch(`${API_URL}/productos/${id}`); 
+    const res = await fetch(`${API_URL}/productos/${id}`);
     console.log(`🔍 Buscando producto por ID: ${id}`);
-    
+
     if (!res.ok) {
-      // Manejar casos donde el producto no se encuentra (404)
       if (res.status === 404) return null;
       throw new Error(`Error al obtener producto: ${res.status}`);
     }
-    
+
     const data = await res.json();
-    console.log(`Producto ID ${id} obtenido:`, data);
-    return data; 
+    return data;
   } catch (error) {
     console.error("❌ Error buscando producto por ID:", error);
-    return [];
+    return null;
   }
 }
 
 // 🔹 Obtener marcas disponibles desde backend
-export async function obtenerMarcasPorCategoria(categoria) {
-  try {
-    const res = await fetch(`${API_URL}/productos/buscar/filtros?categoria=${categoria}`);
-    if (!res.ok) throw new Error("Error al obtener marcas");
+
+export  async function obtenerFiltrosDisponibles(categoria){
+  try
+  {
+    const res = await fetch(`${API_URL}/productos/buscar/filtros/${categoria}`);
+    if (!res.ok) throw new Error("Error al obtener filtros disponibles");
     const data = await res.json();
-    return data.marcas || [];
-  } catch (error) {
-    console.error("❌ Error obteniendo marcas:", error);
-    return [];
-  }
-}
+    console.log("✅ Filtros disponibles obtenidos:", data);
+    return data;
+  }catch(error){
+    console.error("❌ Error obteniendo filtros disponibles:", error);
+    return {
+      marcas: [],
+      rangoPrecio: {
+        min: "0",
+        max: "0"
+    }
+    };
+  } 
+} 
+

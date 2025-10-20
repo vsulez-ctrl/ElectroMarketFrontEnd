@@ -1,8 +1,11 @@
 import PlantillaProductos from "../components/Productos/PlantillaProductos";
-import {obtenerMarcasActuadores, buscarProductosPorCategoria} from "../services/productService";
+import {obtenerFiltrosDisponibles, buscarProductosPorCategoria} from "../services/productService";
 import banner from "../assets/imagenes/productos/HeroProductos/ActuadoresHero.jpg";
 
 export default function Actuadores() {
+  const handleObtenerFiltros = () => {
+        return obtenerFiltrosDisponibles('Actuadores');
+  }
   const buscarActuadores = () => {
       return buscarProductosPorCategoria('Actuadores');
   }
@@ -10,7 +13,7 @@ export default function Actuadores() {
     <PlantillaProductos
       titulo="Actuadores"
       banner={banner}
-      obtenerMarcas={obtenerMarcasActuadores}
+      obtenerFiltrosIniciales={handleObtenerFiltros}
       buscarProductos={buscarActuadores}
       rangoPrecio={{ min: 22000, max: 600000 }}
     />

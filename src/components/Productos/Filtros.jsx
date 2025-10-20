@@ -1,4 +1,4 @@
-const Filtros = ({ titulo, marcas, filtro, setFiltro, limpiar }) => {
+const Filtros = ({ titulo, marcas,rangoPrecioDisponible, filtro, setFiltro, limpiar }) => {
   const nf = new Intl.NumberFormat("es-CO");
 
   const toggleMarca = (m) =>
@@ -46,7 +46,7 @@ const Filtros = ({ titulo, marcas, filtro, setFiltro, limpiar }) => {
         <div className="flex flex-col sm:flex-row items-center gap-2">
           <input
             type="number"
-            min={0}
+            min={rangoPrecioDisponible.min}
             value={filtro.min}
             onChange={(e) =>
               setFiltro((s) => ({ ...s, min: Number(e.target.value || 0) }))
@@ -56,7 +56,7 @@ const Filtros = ({ titulo, marcas, filtro, setFiltro, limpiar }) => {
           <span className="hidden sm:inline">—</span>
           <input
             type="number"
-            min={0}
+            min={rangoPrecioDisponible.max || 0}
             value={filtro.max}
             onChange={(e) =>
               setFiltro((s) => ({ ...s, max: Number(e.target.value || 0) }))
@@ -65,7 +65,7 @@ const Filtros = ({ titulo, marcas, filtro, setFiltro, limpiar }) => {
           />
         </div>
         <div className="text-xs opacity-75 text-center sm:text-left">
-          ${nf.format(filtro.min)} — ${nf.format(filtro.max)}
+          ${nf.format(rangoPrecioDisponible.min)} — ${nf.format(rangoPrecioDisponible.max)}
         </div>
       </div>
 

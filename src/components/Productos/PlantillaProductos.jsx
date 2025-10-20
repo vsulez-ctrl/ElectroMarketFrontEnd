@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
 import HeroProducto from "./HeroProducto";
@@ -8,42 +8,65 @@ import ListaProductos from "./ListaProductos";
 const PlantillaProductos = ({
   titulo,
   banner,
-  obtenerMarcas,
+  obtenerFiltrosIniciales,
   buscarProductos,
-  rangoPrecio = { min: 20000, max: 500000 },
 }) => {
-  const [marcas, setMarcas] = useState([]);
-  const [items, setItems] = useState([]);
-  const [cargando, setCargando] = useState(false);
-  const [filtro, setFiltro] = useState({
+  const [filtrosDisponibles, setFiltrosDisponibles] = useState({
+    
     marcas: [],
-    min: rangoPrecio.min,
-    max: rangoPrecio.max,
-    disponible: false,
-    q: "",
+    rangoPrecio: { min: "0", max: "0" },
+    disponibilidad: false,
+    
   });
 
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState({
+        marcas: [],
+        min: filtrosDisponibles.rangoPrecio.min || 0, 
+        max: filtrosDisponibles.rangoPrecio.max || 0,
+        disponible: false,
+        q: "",
+    });
+
+  const [items, setItems] = useState([]);
+  const [cargando, setCargando] = useState(false);
   const nf = useMemo(() => new Intl.NumberFormat("es-CO"), []);
 
   useEffect(() => {
-    (async () => setMarcas(await obtenerMarcas()))();
-  }, [obtenerMarcas]);
+    (async () => {
+      try{
+      console.log("🔄 Obteniendo filtros iniciales...");
+      const data= await obtenerFiltrosIniciales();
+      setFiltrosDisponibles(data);
+      const minPrecio = parseFloat(data.rangoPrecio.min);
+      const maxPrecio = parseFloat(data.rangoPrecio.max);
+      setFiltroSeleccionado((previoFiltro) => ({
+        ...previoFiltro,
+        min: minPrecio,
+        max: maxPrecio,
+      }));
+      console.log("✅ Filtros iniciales obtenidos:", data);
+      }catch(error){
+        console.error("❌ Error obteniendo filtros iniciales:", error); 
+      }
+    })();
+  }, [obtenerFiltrosIniciales]);
+
 
   useEffect(() => {
     (async () => {
       setCargando(true);
-      console.log("🔎 Buscando productos con filtro:", filtro);
-      setItems(await buscarProductos(filtro));
+      setItems(await buscarProductos());
       setCargando(false);
+      console.log("🔎 Buscando productos con filtro:", filtroSeleccionado);
       
     })();
-  }, [filtro, buscarProductos]);
+  }, [filtroSeleccionado, buscarProductos]);
 
   const limpiar = () =>
-    setFiltro({
+    setFiltroSeleccionado({
       marcas: [],
-      min: rangoPrecio.min,
-      max: rangoPrecio.max,
+      min: filtrosDisponibles.rangoPrecio.min,
+      max: filtrosDisponibles.rangoPrecio.max,
       disponible: false,
       q: "",
     });
@@ -56,9 +79,10 @@ const PlantillaProductos = ({
       <div className="max-w-7xl mx-auto px-5 py-8  grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-6">
         <Filtros
           titulo={titulo.toUpperCase()}
-          marcas={marcas}
-          filtro={filtro}
-          setFiltro={setFiltro}
+          marcas={filtrosDisponibles.marcas}
+          rangoPrecioDisponible={filtrosDisponibles.rangoPrecio}
+          filtro={filtroSeleccionado}
+          setFiltro={setFiltroSeleccionado}
           limpiar={limpiar}
         />
 

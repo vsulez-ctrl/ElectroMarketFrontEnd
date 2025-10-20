@@ -1,10 +1,13 @@
 // Microcontroladores.js
 
 import PlantillaProductos from "../components/Productos/PlantillaProductos";
-import { obtenerMarcasMicro, buscarProductosPorCategoria } from "../services/productService";
+import { obtenerFiltrosDisponibles, buscarProductosPorCategoria } from "../services/productService";
 import banner from "../assets/imagenes/productos/HeroProductos/microcontroladores-hero.png";
 
 export default function Microcontroladores() {
+  const handleObtenerFiltros = () => {
+        return obtenerFiltrosDisponibles('Microcontroladores');
+    }
   const handleBuscarProductos = () => {
       return buscarProductosPorCategoria('Microcontroladores');
   }
@@ -13,9 +16,9 @@ export default function Microcontroladores() {
     <PlantillaProductos
       titulo="Microcontroladores"
       banner={banner}
-      obtenerMarcas={obtenerMarcasMicro}
+      obtenerFiltrosIniciales={handleObtenerFiltros}
       buscarProductos={handleBuscarProductos} 
-      rangoPrecio={{ min: 20000, max: 500000 }}
     />
+  
   );
 }
