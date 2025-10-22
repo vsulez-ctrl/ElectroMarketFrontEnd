@@ -1,11 +1,12 @@
 // src/components/Navbar/IconsButton.jsx
-const IconsButton = ({ Icon, onClick }) => {
+const IconsButton = ({ Icon, onClick , className="", children}) => {
     return (
         <button
             onClick={onClick}
-            className="p-2 rounded-full hover:bg-blue-400 transition"
+            className={`p-2  cursor-pointer ${className}`}
         >
             <Icon />
+            {children}
         </button>
     );
 };

@@ -17,11 +17,11 @@ const CardProducto = ({ producto, nf }) => (
     </div>
     <div className="space-y-1 text-center">
       <h3 className="font-semibold leading-snug" title={producto.nombre}>{producto.nombre}</h3>
-      <div className="text-xs opacity-80">{producto.marca}</div>
+      <div className="text-xs opacity-80">{producto.nombre_marca}</div>
       <div className="text-[0.9rem]">{producto.descripcion}</div>
       <div className="font-extrabold">${nf.format(producto.precio)}</div>
     </div>
-    <Link to={`/productos/${producto.categoria.toLowerCase()}/${producto.id}`} className="mt-auto bg-blue-600 hover:bg-blue-500 transition text-white text-center font-semibold rounded-lg py-2">
+    <Link to={`/productos/${producto.nombre_categoria.toLowerCase()}/${producto.id}`} className="mt-auto bg-blue-600 hover:bg-blue-500 transition text-white text-center font-semibold rounded-lg py-2">
       Ver detalle
     </Link>
   </article>

@@ -1,7 +1,9 @@
 // src/components/Navbar/NavIconos.jsx
 import IconsButton from "./IconsButton";
 import { Link } from "react-router-dom";
-
+import { useCart } from "../../context/CartContext.jsx";
+import CartDropdown from "../layout/CartDropdown.jsx";
+import { useState } from "react";
 // Icono de carrito
 const BagIcon = () => (
     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">0<path d="M12 4.75C12 2.54086 10.2091 0.75 8 0.75C5.79086 0.75 4 2.54086 4 4.75" stroke="black" strokeWidth="1.5" strokeLinecap="round"></path><mask id="mask0_44_9583" mask-type="alpha" maskUnits="userSpaceOnUse" x="0" y="6" width="17" height="11"><path d="M1.60098 6.72534L3.20098 15.1319H12.801L14.401 6.72534H16.001V16.8132H0.000976562V6.72534H1.60098Z" fill="black"></path></mask><g mask="url(#mask0_44_9583)"><path d="M0.945068 7.56598L2.27867 15.9725H13.7235L15.0571 7.56598H0.945068Z" stroke="black" stroke-width="1.6" stroke-linejoin="round"></path></g></svg>
@@ -52,14 +54,33 @@ const SearchIcon = () => (
 );
 
 const NavIconos = () => {
+    const { totalItems } = useCart();
+    const [open, setOpen] = useState(false);
+
+  const toggleDropdown = () => setOpen(!open);
+    
   return (
     <div className="flex items-center h-full flex-1 gap-5 xl:gap-10 pr-1.5 justify-end xl:pr-[26px] py-2 lg:py-3">
       <IconsButton Icon={SearchIcon} />
       <Link to="/login">
         <IconsButton Icon={UserIcon} />
       </Link>
-      <IconsButton Icon={BagIcon} />
-    </div>
+      
+
+      <IconsButton Icon={BagIcon} onClick={toggleDropdown} className="relative"> 
+      {totalItems > 0 && (
+        <span className="absolute top-[8px] right-[6px]  text-black text-[0.6rem]  w-5 h-5 rounded-full flex items-center justify-center cursor-pointer">
+          {totalItems}
+        </span>
+      )}
+      </IconsButton>
+      {open && (
+        <div className="absolute right-0 mt-20">
+          <CartDropdown />
+        </div>
+      )}
+      </div>
+   
   );
 };
 

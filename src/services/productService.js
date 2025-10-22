@@ -50,37 +50,53 @@ export async function buscarActuadores(filtro) {
 
 const API_URL = "http://localhost:3000"; // cambia si usas otro puerto o dominio
 
-// 🔹 Buscar productos con filtros
-export async function buscarProductos(filtro, categoria) {
-  try {
+
+const construirQueryString = (filtros) => {
     const params = new URLSearchParams();
 
-    // Agregamos parámetros dinámicamente
-    if (categoria) params.append("categoria", categoria);
-    if (filtro.q) params.append("query", filtro.q);
-    if (filtro.min) params.append("precioMin", filtro.min);
-    if (filtro.max) params.append("precioMax", filtro.max);
-    if (filtro.marcas?.length) params.append("marcas", filtro.marcas.join(","));
-    if (filtro.disponible) params.append("soloDisponibles", "true");
+    // 1. Categoria (Obligatoria)
+    if (filtros.categoria) {
+        params.append('categoria', filtros.categoria);
+    }
 
-    const res = await fetch(`${API_URL}/productos/buscar?${params.toString()}`);
-    if (!res.ok) throw new Error(`Error al buscar productos (${res.status})`);
+    // 2. Marcas (Si hay más de una, la API debe manejarlas como un array)
+    // Usaremos el formato ?marcas=A&marcas=B
+    if (filtros.marcas && filtros.marcas.length > 0) {
+        const marcasString = filtros.marcas.join(',');
+        params.append('marcas', marcasString);
+    }
+    const subcategoriaValor = filtros.subcategoria ? filtros.subcategoria.trim() : null;
+    if (subcategoriaValor) params.append('subcategoria', subcategoriaValor);
+    // 3. Rango de Precio
+    if (filtros.min) {
+        params.append('precioMin', filtros.min);
+    }
+    if (filtros.max) {
+        params.append('precioMax', filtros.max);
+    }
+
+    // 4. Búsqueda de texto (q)
+    if (filtros.q) {
+        params.append('texto', filtros.q);
+    }
+
+    // 5. Disponibilidad
+    if (filtros.disponible === true) {
+        params.append('disponible', 'true');
+    }
     
-    const data = await res.json();
-    console.log("✅ Productos filtrados obtenidos:", data);
-    return data;
-  } catch (error) {
-    console.error("❌ Error al buscar productos:", error);
-    return [];
-  }
-}
-
+    return params.toString();
+};
 // 🔹 Obtener productos por categoría
-export async function buscarProductosPorCategoria(categoria) {
+export async function buscarProductos(filtros, categoria) {
   try {
-    const res = await fetch(`${API_URL}/productos/categoria/${categoria}`);
-    if (!res.ok) throw new Error(`Error al obtener productos de ${categoria}`);
+    const todosFiltros ={... filtros, categoria};
+    const queryString = construirQueryString(todosFiltros);
+    const url = `${API_URL}/productos/buscar?${queryString}`;
+    const res = await fetch(url);
+    if (!res.ok) console.log(`Error al obtener productos de ${categoria}`);
     const data = await res.json();
+    console.log("➡️ Fetching URL:", url);
     console.log("✅ Productos por categoría:", data);
     return data;
   } catch (error) {
@@ -94,7 +110,6 @@ export async function buscarProductosPorCategoria(categoria) {
 export async function obtenerProductoPorId(id) {
   try {
     const res = await fetch(`${API_URL}/productos/${id}`);
-    console.log(`🔍 Buscando producto por ID: ${id}`);
 
     if (!res.ok) {
       if (res.status === 404) return null;
@@ -114,6 +129,7 @@ export async function obtenerProductoPorId(id) {
 export  async function obtenerFiltrosDisponibles(categoria){
   try
   {
+    console.log("➡️ Obteniendo filtros disponibles para categoría: api", categoria);
     const res = await fetch(`${API_URL}/productos/buscar/filtros/${categoria}`);
     if (!res.ok) throw new Error("Error al obtener filtros disponibles");
     const data = await res.json();

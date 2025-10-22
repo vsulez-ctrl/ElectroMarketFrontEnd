@@ -4,11 +4,10 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { obtenerProductoPorId } from "../services/productService";
 import TablaEspecificaciones from "../components/Productos/TablaEsoecificaciones";
-
+import { useCart } from "../context/CartContext";
 export default function ProductoDetalle() {
-  console.log("🔍 Cargando detalle de producto...");
+  const { addToCart } = useCart();
   const { categoria, id } = useParams();
-  console.log(`📂 Categoría: ${categoria}, 🆔 ID: ${id}`);
   const [producto, setProducto] = useState(null);
   const [cantidad, setCantidad] = useState(1);
 
@@ -17,7 +16,9 @@ export default function ProductoDetalle() {
   };
 
   const aumentar = () => {
-    setCantidad(cantidad + 1);
+    if (producto && cantidad < producto.stock) {
+        setCantidad(cantidad + 1);
+    }
   };
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function ProductoDetalle() {
       if(id){
 
         const data = await obtenerProductoPorId(id);
-        console.log("✅ Producto obtenido:", data);
+    
         setProducto(data);
       }
     })();
@@ -35,7 +36,7 @@ export default function ProductoDetalle() {
   const specs = producto?.especificaciones;
   return (
     <div className="min-h-screen text-gray-900 ">
-      <Navbar />
+
       <div className="max-w-6xl mx-auto px-5 py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-[#0f131b] p-5 rounded-xl flex items-center justify-center">
           <img
@@ -49,31 +50,31 @@ export default function ProductoDetalle() {
           <p className="text-sm opacity-80 mb-4">{producto.marca}</p>
           <div className="text-2xl font-extrabold mb-6">${producto.precio.toLocaleString("es-CO")}</div>
           <p className="text-sm mb-6 tracking-[2px] leading-6 ">{producto.detalle_extenso}</p>
-          <p className="text-shadow-blue-950 font-bold mb-5"> Stock disponible: {producto.stock} </p>
+          <p className="text-shadow-blue-950 font-bold mb-5 font-halis"> Stock disponible: {producto.stock} </p>
       <div className="flex items-center gap-4 mb-6 justify-center">
 
-      <p className=" text-[1.3rem] mr-5">Cantidad:</p>
+      <p className=" text-[1.3rem] mr-5 font-chronicle">Cantidad:</p>
       <div className="flex items-center  rounded-md overflow-hidden">
         <button
           onClick={disminuir}
-          className="px-3    text-white text-[1.5rem] bg-gray-900 hover:bg-gray-300 font-bold"
+          className="px-3    text-white text-[1.5rem] bg-gray-800 hover:bg-gray-600 font-bold"
         >
           -
         </button>
-        <span className="px-4">{cantidad}</span>
+        <span className="px-4 font-chronicle">{cantidad}</span>
         <button
           onClick={aumentar}
-          className="px-3 py-1 bg-gray-900 text-white hover:bg-gray-300 font-bold"
+          className="px-3 py-1 bg-gray-800 text-white hover:bg-gray-600 font-bold"
         >
           +
         </button>
       </div>
     </div>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center font-halis font-extralight">
 
           <button
-            className="bg-blue-600 hover:bg-blue-500 transition text-white font-semibold rounded-lg px-6 py-3 "
-            onClick={() => alert("Añadido al carrito 🛒")}
+            className="bg-blue-600 hover:bg-blue-700 transition text-white  rounded-lg px-6 py-3 "
+            onClick={() => addToCart(producto, cantidad)}
           >
             Añadir al carrito
           </button>

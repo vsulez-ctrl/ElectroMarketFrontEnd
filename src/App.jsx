@@ -1,31 +1,35 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Registro from "./Pages/Registro";
-
-// ⬇️ importa la nueva vista HU-4
-import Microcontroladores from "./Pages/Microcontroladores";
-import Actuadores from "./Pages/Actuadores";
-import Sensores from "./Pages/Sensores";
+import PlantillaProductos from "./Pages/PlantillaProductos";
 import ProductoDetalle from "./Pages/ProductoDetalle";
-// Nueva página de método de pago
 import MetodoPago from "./Pages/MetodoPago";
+import Navbar from "./components/layout/Navbar";
+import { useCart } from "./context/CartContext";
+import Aviso from "./components/Aviso/Aviso";
 
 function App() {
+  const location = useLocation();
+  const {limiteAlcanzado, setlimiteAlcanzado} = useCart();
+
+  // Ocultar el navbar en la ruta /metodo-pago
+  const hideNavbar = location.pathname === "/metodo-pago";
+
   return (
     <>
+    {limiteAlcanzado && (
+        <Aviso mostrar={limiteAlcanzado} onClose={() => setlimiteAlcanzado(false)} />
+      )}
+      {!hideNavbar && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
-
-        {/* ⬇️ nueva ruta HU-4 */}
-        <Route path="productos/microcontroladores" element={<Microcontroladores />} />
-        <Route path="productos/actuadores" element={<Actuadores />} />
-        <Route path="productos/sensores" element={<Sensores />} />
-        {/* Página para seleccionar método de pago */}
-        <Route path="/metodo-pago" element={<MetodoPago />} />
+        <Route path="/productos" element={<PlantillaProductos />} />
         <Route path="/productos/:categoria/:id" element={<ProductoDetalle />} />
+        <Route path="/metodo-pago" element={<MetodoPago />} />
       </Routes>
     </>
   );

@@ -40,7 +40,8 @@ const DropdownMenu = ({ label }) => {
         <div className="absolute left-0  mt-8 bg-white text-gray-900 shadow-lg rounded-md flex p-0 flex-col gap-16 z-50 xl:flex-row xl:p-10">
           {categories.map((category) => (
             <div key={category.title} className="min-w-[150px]">
-              <Link className="text-blue-400 font-semibold mb-2 uppercase" to={`/productos/${category.title.toLowerCase()}`}>
+              <Link className="text-blue-400 font-semibold mb-2 uppercase"                 to={`/productos?categoria=${category.title.toLowerCase()}`}
+>
               {category.title}
                
               </Link>
@@ -48,7 +49,8 @@ const DropdownMenu = ({ label }) => {
                 {category.items.map((item) => (
                   <li key={item}>
                     <Link
-                      to={`/productos/${item.toLowerCase()}`}
+                      to={`/productos?categoria=${category.title.toLowerCase()}&subcategoria=${item.toLowerCase()}`}
+
                       className="hover:text-blue-300"
                     >
                       {item}

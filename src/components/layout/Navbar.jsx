@@ -8,7 +8,7 @@ import logo from '../../assets/imagenes/ui/logo.png';
 const Navbar = () => {
   return (
     <nav className=" ">
-      <div className="flex z-50  py-10 items-center  h-12 md:h-14 lg:h-[84px] sticky ">
+      <div className="flex z-50  py-10 items-center  h-12 md:h-10  sticky ">
         <Logo src={logo} height={100} />
         <NavLinks />
         <NavIcons/>
